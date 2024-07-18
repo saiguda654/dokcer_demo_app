@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        input {
+            padding: 10px;
+            margin: 5px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #confirmationMessage {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Order Product</h1>
+    <input type="number" id="product_id" placeholder="Product ID" required />
+    <input type="number" id="quantity" placeholder="Quantity" required />
+    <button id="orderButton">Place Order</button>
+    <p id="confirmationMessage"></p>
+
+    <script>
+        document.getElementById('orderButton').onclick = async () => {
+            const productId = document.getElementById('product_id').value;
+            const quantity = document.getElementById('quantity').value;
+
+            try {
+                const response = await fetch('http://18.212.21.14/order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ product_id: productId, quantity: quantity })
+                });
+
+                const data = await response.json();
+                document.getElementById('confirmationMessage').innerText = data.message || "Order placement failed.";
+            } catch (error) {
+                document.getElementById('confirmationMessage').innerText = "Error: " + error.message;
+            }
+        };
+    </script>
+</body>
+</html>
